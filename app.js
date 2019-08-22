@@ -3,11 +3,13 @@ const bodyParser = require("body-parser");
 const graphqlHttp = require("express-graphql");
 const { buildSchema } = require("graphql");
 
-var db = require("./artwork.json");
+// var db = require("./artwork.json");
 
 const app = express();
 
 const artwork = [];
+const artists = [];
+const images = [];
 
 app.use(bodyParser.json());
 
@@ -17,16 +19,43 @@ app.use(
     schema: buildSchema(`
         type Artist {
           _id: ID!
-          artCldArtistId: ID
           name: String!
+          artCldArtistId: String
+          about: String
+          image: String
+        }
+
+        input ArtistInput {
+          name: String!
+          artCldArtistId: String
           about: String
           image: String
         }
 
         type Image {
           _id: ID!
-          artCldImgId: ID
           url: String!
+          artCldImgId: String
+          smallUrl: String
+          mediumUrl: String
+          largeUrl: String
+          giantUrl: String
+          primaryR: Int
+          primaryG: Int
+          primaryB: Int
+          secondaryR: Int
+          secondaryG: Int
+          secondaryB: Int
+          tertiaryR: Int
+          tertiaryG: Int
+          tertiaryB: Int
+          width: Int
+          height: Int
+        }
+
+        input ImageInput {
+          url: String!
+          artCldImgId: ID
           smallUrl: String
           mediumUrl: String
           largeUrl: String
@@ -51,6 +80,12 @@ app.use(
           depth: Float
         }
 
+        input DimensionsInput {
+          height: Float!
+          width: Float!
+          depth: Float
+        }
+
         type Art {
           _id: ID!
           artCldId: ID
@@ -65,10 +100,10 @@ app.use(
         }
 
         input ArtInput {
-          artist: Artist!
+          artist: ArtistInput!
           date: String!
-          dimensions: Dimensions!
-          image: Image!
+          dimensions: DimensionsInput!
+          image: ImageInput!
           title: String!
           tags: [String!]
         }
@@ -80,16 +115,19 @@ app.use(
         }
 
         input FavoriteInput {
-            art: Art!
+            art: ArtInput!
             dateCreated: String!
         }
 
         type RootQuery {
           favorites: [String!]!
           artWorks: [Art!]!
+          artists: [Artist!]!
+          images: [Image!]!
         }
 
         type RootMutation {
+          createArtist(artistInput: ArtistInput): Artist
           createArt(artInput: ArtInput): Art
           createFavorite(name: String): String
         }
@@ -100,20 +138,45 @@ app.use(
         }
     `),
     rootValue: {
-        artWorks: () => {
+      artists: () => {
+        return artists;
+      },
+      createArtist: args => {
+        const artist = {
+          name: args.artistInput.name,
+          artCldArtistId: args.artistInput.artCldArtistId,
+          about: args.artistInput.about,
+          image: args.artistInput.image
+        };
+        artists.push(artist);
+        return artist;
+      },
 
+      artWorks: () => {
+        return artworks;
+      },
+      //   function to find index based on attribute
+      findAttr: (arr, attr, val) => {
+        for (var i = 0; i < arr.length; i += 1) {
+          if (array[i][attr] === value) {
+            return i;
+          }
         }
-        createArt: args => {
-            const art = new Art({
-                artist: args.artInput.artist,
-                date: args.artInput.date,
-                dimensions: args.artInput.dimensions,
-                image: args.artInput.image,
-                title: args.artInput.title,
-                tags: args.artInput.tags
-            });
-            
-        }
+        return -1;
+      },
+
+      createArt: args => {
+        const art = {
+          artist: args.artInput.artist,
+          date: args.artInput.date,
+          dimensions: args.artInput.dimensions,
+          image: args.artInput.image,
+          title: args.artInput.title,
+          tags: args.artInput.tags
+        };
+        artwork.push(art);
+        return art;
+      },
       favorites: () => {
         return ["lskdjflksdjf", "slkdjflksdjf", "sldkjflsakjdf"];
       },
