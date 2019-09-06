@@ -1,9 +1,9 @@
 module.exports = `
-type Query {
-  artwork: [Artwork]
-}
+  type Query {
+    getArt: [Artwork]
+  }
 
-type Localization {
+  type Localization {
     CurrencySymbol: String
     CurrencySymbolPlacement: Int
     DecimalPoint: String
@@ -135,12 +135,6 @@ type Localization {
     Editions: [Editions]
     Dimensions: Dimensions
     Artist: Artist
-  }
-  
-  type ArtCld {
-    Filtered: Int
-    Total: Int
-    Artwork: [Artwork]
   }
   
   # Types with identical fields:

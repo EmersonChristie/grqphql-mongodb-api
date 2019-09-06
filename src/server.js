@@ -5,7 +5,7 @@ const { ApolloServer } = require("apollo-server");
 
 const typeDefs = require("./schema");
 const resolvers = require("./resolvers");
-const ArtCldDataSource = require("./data-sources/artCld");
+const Artwork = require("./data-sources/Artwork");
 // const LikesDataSource = require('./data-sources/likes');
 
 // Set up Apollo Server
@@ -20,7 +20,7 @@ const server = new ApolloServer({
   //   // return { user: isEmail.validate(email) ? email : null };
   // },
   dataSources: () => ({
-    artCldAPI: new ArtCldDataSource()
+    Artwork: new Artwork()
     // likesAPI: new LikesDataSource(),
   })
 });
