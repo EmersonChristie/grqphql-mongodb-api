@@ -1,48 +1,28 @@
 const { RESTDataSource } = require("apollo-datasource-rest");
 
-const BASE_URL = "https://artcloudgalleryapi.azurewebsites.net/";
-const API_KEY = `${process.env.ARTCLD_API_KEY}`;
+// const BASE_URL = "https://artcloudgalleryapi.azurewebsites.net/";
+// const API_KEY = `${process.env.ARTCLD_API_KEY}`;
+
+const { artCldUrl, artCldKey } = require('../../config');
+// const { artCldKey } = require('../../config');
 
 class Artwork extends RESTDataSource {
   constructor() {
     super();
-    this.baseURL = BASE_URL;
+    this.baseURL = artCldUrl;
   }
 
   willSendRequest(request) {
     request.headers.set(
       "Authorization",
-      "artcloud E673266C-DC81-411D-B91F-898A6D83C8FB"
+      artCldKey
     ); //TODO env variables
   }
   //TODO Error Checking
   async getArt() {
     const res = await this.get(`art`);
-    return res.Artwork; // TODO .artwork
+    return res.Artwork;
   }
 }
 
 module.exports = Artwork;
-
-// const { RESTDataSource } = require("apollo-datasource-rest");
-
-// const BASE_URL = "https://artcloudgalleryapi.azurewebsites.net/";
-// const API_KEY = `${process.env.ARTCLD_API_KEY}`;
-
-// class ArtCldAPI extends RESTDataSource {
-//   constructor() {
-//     super();
-//     this.baseURL = BASE_URL;
-//   }
-//   // TODO: request.headers.set("Authorization", this.context.token);
-//   willSendRequest(request) {
-//     request.headers.set("Authorization", API_KEY);
-//   }
-//   //TODO Error Checking
-//   async getArt() {
-//     const { res } = await this.get(`art/`);
-//     return res.Artwork; // TODO .artwork
-//   }
-// }
-
-// module.exports = ArtCldAPI;

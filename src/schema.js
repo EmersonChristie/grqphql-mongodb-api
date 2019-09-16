@@ -1,6 +1,30 @@
 module.exports = `
   type Query {
     getArt: [Artwork]
+    getFavorites: [Favorite!]!
+  }
+
+  type Mutation {
+    createFavorite(favoriteInput: FavoriteInput): Favorite
+  }
+
+  type Favorite {
+    _id: ID!
+    artId: String!
+    title: String
+    img: String
+    artist: String
+    dimensions: String
+    medium: String
+  }
+
+  input FavoriteInput {
+    artId: String!
+    title: String
+    img: String
+    artist: String
+    dimensions: String
+    medium: String
   }
 
   type Localization {
